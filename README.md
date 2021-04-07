@@ -1,4 +1,4 @@
-# WiFi LEDS
+# Lapis Lights Code Base
 ![alt text](WLED_APP.png)
 
 # WiFi LED Strips	# WiFi LED Strips
