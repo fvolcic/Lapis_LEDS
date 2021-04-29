@@ -8,18 +8,18 @@ import jinja2
 from verbose_printer import VerbosePrinter
 
 printer = VerbosePrinter(False)
+output_file = ""
 
 @click.command()
 @click.argument('input_dir')
-@click.option('--output', '-o', default='no file location specified',
+@click.option('--output', '-o', default='createAction.cpp',
               help='Output directory.')
 @click.option('--verbose', '-v', is_flag=True, help='printer.print more output.')
 def cli_inputs(input_dir, output, verbose):
     """Templated static website generator."""
-    if output == 'no file location specified':
-        output = input_dir+"/html"
+    global output_file
+    output_file = output
     printer.set_mode(verbose)
-    #printer = VerbosePrinter(verbose)
     parse_program(input_dir, output)
 
 
@@ -43,10 +43,10 @@ def parse_program(input_dir, output):
 
     template = template_env.get_template('createAction.cpp')
     
-    printer.print('Writing Output to: {}'.format("createAction.cpp"))
-    (input_dir/Path('createAction.cpp')).unlink(missing_ok=True)
-    (input_dir/Path('createAction.cpp')).touch()
-    (input_dir/Path('createAction.cpp')).write_text(template.render(config))
+    printer.print('Writing Output to: {}'.format(output_file))
+    (input_dir/Path(output_file)).unlink(missing_ok=True)
+    (input_dir/Path(output_file)).touch()
+    (input_dir/Path(output_file)).write_text(template.render(config))
 
 
 def generate_action_keys_from_files(file_dir):
