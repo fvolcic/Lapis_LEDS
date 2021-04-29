@@ -16,217 +16,206 @@
 #include "SolidColorTransition.cpp"
 #include "StripCopyShift.cpp"
 #include "SubAction.cpp"
-#include "uninitilizedData.cpp"
 
-void MQTTParser::createAction(const uint8_t led_count)
-{
+void MQTTParser::createAction(const uint8_t led_count){
 
-     Serial.println("Create Action Called");
+      Serial.println("Create Action Called");
 
-     static const char OTA_UPDATER_ACTIONKEY[5] = "UPDA";
-     static const char UninitilizedDat_ACTIONKEY[5] = "UNIT";
-     static const char BRIGHTNESS_UPDATER_ACTIONKEY[5] = "BRIG";
-     static const char BrightnessGradient_ACTIONKEY[5] = "BGRD";
-     static const char CLEAR_ACTIONS_ACTIONKEY[5] = "CLEA";
-     static const char BrightnessRandomizer_ACTIONKEY[5] = "RBRI";
-     static const char DynamicShiftAction_ACTIONKEY[5] = "DSHF";
-     static const char Gradient_ACTIONKEY[5] = "GRAD";
-     static const char MovingGradient_ACTIONKEY[5] = "MGRD";
-     static const char MirrorAction_ACTIONKEY[5] = "MIRR";
-     static const char LEDPoint_ACTIONKEY[5] = "PONT";
-     static const char TintRandomizer_ACTIONKEY[5] = "TINT";
-     static const char SnapshotShiftAction_ACTIONKEY[5] = "SNAP";
-     static const char SolidColor_ACTIONKEY[5] = "SOLI";
-     static const char SolidTransition_ACTIONKEY[5] = "STRN";
-     static const char ShiftAction_ACTIONKEY[5] = "SHFT";
-     static const char SubAction_ACTIONKEY[5] = "SACT";
+ static const char OTA_UPDATER_ACTIONKEY[5] = "UPDA";
+    static const char BRIGHTNESS_UPDATER_ACTIONKEY[5] = "BRIG";
+    static const char BrightnessGradient_ACTIONKEY[5] = "BGRD";
+    static const char CLEAR_ACTIONS_ACTIONKEY[5] = "CLEA";
+    static const char BrightnessRandomizer_ACTIONKEY[5] = "RBRI";
+    static const char DynamicShiftAction_ACTIONKEY[5] = "DSHF";
+    static const char Gradient_ACTIONKEY[5] = "GRAD";
+    static const char MovingGradient_ACTIONKEY[5] = "MGRD";
+    static const char MirrorAction_ACTIONKEY[5] = "MIRR";
+    static const char LEDPoint_ACTIONKEY[5] = "PONT";
+    static const char TintRandomizer_ACTIONKEY[5] = "TINT";
+    static const char SnapshotShiftAction_ACTIONKEY[5] = "SNAP";
+    static const char SolidColor_ACTIONKEY[5] = "SOLI";
+    static const char SolidTransition_ACTIONKEY[5] = "STRN";
+    static const char ShiftAction_ACTIONKEY[5] = "SHFT";
+    static const char SubAction_ACTIONKEY[5] = "SACT";
+    
 
-     //Delete the action if the current stored action was never used.
-     if (actionAvailable)
-          delete action;
-     switch (actionKey[0])
-     {
+  //Delete the action if the current stored action was never used.
+  if (actionAvailable)
+    delete action;
+      switch(actionKey[0]){
+      
+        case 'U':{
+        
+        
+         if (cstrcmp(OTA_UPDATER_ACTIONKEY, actionKey)){
+                  actionAvailable = false;
+    xTaskCreatePinnedToCore(update_firmware, "UPDATE", 10000, NULL, 1, NULL, xPortGetCoreID());
+    vTaskDelete(NULL);
 
-     case 'U':
-     {
+              break; 
+         }
+        
+        }
+      
+        case 'B':{
+        
+        
+         if (cstrcmp(BRIGHTNESS_UPDATER_ACTIONKEY, actionKey)){
+                  actionAvailable = false;
+    brightness = atoi(MQTTMessage);
+    brightnessAvailable = true;
 
-          if (cstrcmp(OTA_UPDATER_ACTIONKEY, actionKey))
-          {
-               actionAvailable = false;
-               xTaskCreatePinnedToCore(update_firmware, "UPDATE", 10000, NULL, 1, NULL, xPortGetCoreID());
-               vTaskDelete(NULL);
+              break; 
+         }
+        
+         if (cstrcmp(BrightnessGradient_ACTIONKEY, actionKey)){
+              action = new BrightnessGradient(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("BrightnessGradient");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'C':{
+        
+        
+         if (cstrcmp(CLEAR_ACTIONS_ACTIONKEY, actionKey)){
+                 killAllActions = true; 
 
-               break;
-          }
+              break; 
+         }
+        
+        }
+      
+        case 'R':{
+        
+         if (cstrcmp(BrightnessRandomizer_ACTIONKEY, actionKey)){
+              action = new BrightnessRandomizer(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("BrightnessRandomizer");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'D':{
+        
+         if (cstrcmp(DynamicShiftAction_ACTIONKEY, actionKey)){
+              action = new DynamicShiftAction(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("DynamicShiftAction");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'G':{
+        
+         if (cstrcmp(Gradient_ACTIONKEY, actionKey)){
+              action = new Gradient(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("Gradient");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'M':{
+        
+         if (cstrcmp(MovingGradient_ACTIONKEY, actionKey)){
+              action = new MovingGradient(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("MovingGradient");
+              break; 
+         }
+        
+        
+         if (cstrcmp(MirrorAction_ACTIONKEY, actionKey)){
+              action = new MirrorAction(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("MirrorAction");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'P':{
+        
+         if (cstrcmp(LEDPoint_ACTIONKEY, actionKey)){
+              action = new LEDPoint(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("LEDPoint");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'T':{
+        
+         if (cstrcmp(TintRandomizer_ACTIONKEY, actionKey)){
+              action = new TintRandomizer(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("TintRandomizer");
+              break; 
+         }
+        
+        
+        }
+      
+        case 'S':{
+        
+         if (cstrcmp(SnapshotShiftAction_ACTIONKEY, actionKey)){
+              action = new SnapshotShiftAction(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("SnapshotShiftAction");
+              break; 
+         }
+        
+        
+         if (cstrcmp(SolidColor_ACTIONKEY, actionKey)){
+              action = new SolidColor(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("SolidColor");
+              break; 
+         }
+        
+        
+         if (cstrcmp(SolidTransition_ACTIONKEY, actionKey)){
+              action = new SolidTransition(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("SolidTransition");
+              break; 
+         }
+        
+        
+         if (cstrcmp(ShiftAction_ACTIONKEY, actionKey)){
+              action = new ShiftAction(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("ShiftAction");
+              break; 
+         }
+        
+        
+         if (cstrcmp(SubAction_ACTIONKEY, actionKey)){
+              action = new SubAction(led_count, MQTTMessage);
+              actionAvailable = true;
+              Serial.println("SubAction");
+              break; 
+         }
+        
+        
+        }
+      
+      default: {
+            break; 
+      }
+        }
 
-          if (cstrcmp(UninitilizedDat_ACTIONKEY, actionKey))
-          {
-               //action = new UninitilizedData(led_count, MQTTMessage);
-               //actionAvailable = true;
-               Serial.println("UninitilizedDat");
-               break;
-          }
-     }
-
-     case 'B':
-     {
-
-          if (cstrcmp(BRIGHTNESS_UPDATER_ACTIONKEY, actionKey))
-          {
-               actionAvailable = false;
-               brightness = atoi(MQTTMessage);
-               brightnessAvailable = true;
-
-               break;
-          }
-
-          if (cstrcmp(BrightnessGradient_ACTIONKEY, actionKey))
-          {
-               action = new BrightnessGradient(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("BrightnessGradient");
-               break;
-          }
-     }
-
-     case 'C':
-     {
-
-          if (cstrcmp(CLEAR_ACTIONS_ACTIONKEY, actionKey))
-          {
-               killAllActions = true;
-
-               break;
-          }
-     }
-
-     case 'R':
-     {
-
-          if (cstrcmp(BrightnessRandomizer_ACTIONKEY, actionKey))
-          {
-               action = new BrightnessRandomizer(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("BrightnessRandomizer");
-               break;
-          }
-     }
-
-     case 'D':
-     {
-
-          if (cstrcmp(DynamicShiftAction_ACTIONKEY, actionKey))
-          {
-               action = new DynamicShiftAction(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("DynamicShiftAction");
-               break;
-          }
-     }
-
-     case 'G':
-     {
-
-          if (cstrcmp(Gradient_ACTIONKEY, actionKey))
-          {
-               action = new Gradient(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("Gradient");
-               break;
-          }
-     }
-
-     case 'M':
-     {
-
-          if (cstrcmp(MovingGradient_ACTIONKEY, actionKey))
-          {
-               action = new MovingGradient(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("MovingGradient");
-               break;
-          }
-
-          if (cstrcmp(MirrorAction_ACTIONKEY, actionKey))
-          {
-               action = new MirrorAction(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("MirrorAction");
-               break;
-          }
-     }
-
-     case 'P':
-     {
-
-          if (cstrcmp(LEDPoint_ACTIONKEY, actionKey))
-          {
-               action = new LEDPoint(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("LEDPoint");
-               break;
-          }
-     }
-
-     case 'T':
-     {
-
-          if (cstrcmp(TintRandomizer_ACTIONKEY, actionKey))
-          {
-               action = new TintRandomizer(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("TintRandomizer");
-               break;
-          }
-     }
-
-     case 'S':
-     {
-
-          if (cstrcmp(SnapshotShiftAction_ACTIONKEY, actionKey))
-          {
-               action = new SnapshotShiftAction(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("SnapshotShiftAction");
-               break;
-          }
-
-          if (cstrcmp(SolidColor_ACTIONKEY, actionKey))
-          {
-               action = new SolidColor(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("SolidColor");
-               break;
-          }
-
-          if (cstrcmp(SolidTransition_ACTIONKEY, actionKey))
-          {
-               action = new SolidTransition(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("SolidTransition");
-               break;
-          }
-
-          if (cstrcmp(ShiftAction_ACTIONKEY, actionKey))
-          {
-               action = new ShiftAction(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("ShiftAction");
-               break;
-          }
-
-          if (cstrcmp(SubAction_ACTIONKEY, actionKey))
-          {
-               action = new SubAction(led_count, MQTTMessage);
-               actionAvailable = true;
-               Serial.println("SubAction");
-               break;
-          }
-     }
-
-     default:
-     {
-          break;
-     }
-     }
 }

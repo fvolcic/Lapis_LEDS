@@ -5,18 +5,21 @@ import shutil
 from pathlib import Path
 import click
 import jinja2
+from verbose_printer import VerbosePrinter
 
+printer = VerbosePrinter(False)
 
 @click.command()
 @click.argument('input_dir')
 @click.option('--output', '-o', default='no file location specified',
               help='Output directory.')
-@click.option('--verbose', '-v', is_flag=True, help='Print more output.')
+@click.option('--verbose', '-v', is_flag=True, help='printer.print more output.')
 def cli_inputs(input_dir, output, verbose):
     """Templated static website generator."""
     if output == 'no file location specified':
         output = input_dir+"/html"
-    #printer.set_verbose(verbose)
+    printer.set_mode(verbose)
+    #printer = VerbosePrinter(verbose)
     parse_program(input_dir, output)
 
 
@@ -36,11 +39,11 @@ def parse_program(input_dir, output):
     
     config = generate_action_keys_from_files(Path(input_dir))
 
-    print(template_env.list_templates())
+    printer.print(template_env.list_templates())
 
     template = template_env.get_template('createAction.cpp')
     
-    
+    printer.print('Writing Output to: {}'.format("createAction.cpp"))
     (input_dir/Path('createAction.cpp')).unlink(missing_ok=True)
     (input_dir/Path('createAction.cpp')).touch()
     (input_dir/Path('createAction.cpp')).write_text(template.render(config))
@@ -60,7 +63,7 @@ def generate_action_keys_from_files(file_dir):
 
 
     customs_path = Path("PaserGenerator")/Path("custom_parsing")/Path("customs.cpp")
-    print("scanning customs")
+    printer.print("scanning customs")
     with open(customs_path) as f: 
         line = ""
         while "#endfile" not in line:
@@ -87,7 +90,7 @@ def generate_action_keys_from_files(file_dir):
                     custom_code += line
                     line = f.readline()
                 
-                print("Found: " + classname + " in customs. Key:" + actionkey)
+                printer.print("Found: " + classname + " in customs. Key:" + actionkey)
                 
                 if actionkey[0] not in config['actionclasses']:
                     config['actionclasses'][actionkey[0]] =  {}
@@ -112,24 +115,24 @@ def generate_action_keys_from_files(file_dir):
                     class_line = f.readline().replace(" ", "")
                 classname = class_line[0:class_line.index(":")].strip("class")
                 actionkey = key_line[key_line.index(":")+1:key_line.index(":")+5]
-                print( "Found: " + classname + "Key: " + actionkey)
+                printer.print( "Found: " + classname + "Key: " + actionkey)
                 if actionkey[0] not in config['actionclasses']:
                     config['actionclasses'][actionkey[0]] =  {}
 
 
-                #print("attempting to add: " + classname + " to letter: " + actionkey[0])
-                #print(config['actionclasses'][actionkey[0]])  
+                #printer.print("attempting to add: " + classname + " to letter: " + actionkey[0])
+                #printer.print(config['actionclasses'][actionkey[0]])  
                 config['actionclasses'][actionkey[0]][ classname ] = { 'action_key' : actionkey, 
                                                                         'custom_function' : False, 
                                                                         'dependencies' : [],
                                                                         'custom_code' : None }
 
-                #print (config['actionclasses'][actionkey[0]])                                                        
+                #printer.print (config['actionclasses'][actionkey[0]])                                                        
                 config['filenames'].append( file.name )
 
-                #print(config)
+                #printer.print(config)
     
-    #print(config) 
+    #printer.print(config) 
     return config
 
 
