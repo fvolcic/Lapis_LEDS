@@ -1,8 +1,8 @@
 #include "GlobalVariables.h"
 
 //WIFI_GLOBALS
-char * WIFI_GLOBALS::ssid = "NETGEAR24";//"NETGEAR24"; 
-char * WIFI_GLOBALS::pass = "littlecartoon561"; 
+char * WIFI_GLOBALS::ssid = SSID";//"NETGEAR24"; 
+char * WIFI_GLOBALS::pass = "PASSWORD"; 
 WiFiClient WIFI_GLOBALS::net = WiFiClient(); 
 
 
