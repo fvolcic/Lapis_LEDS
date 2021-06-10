@@ -4,24 +4,25 @@
 # WiFi LED Strips	# WiFi LED Strips
 
 
-## About	## About
-<ul>This project was created to contorl LED lights via wifi on an MQTT server. </ul>	<ul>This project was created to contorl LED lights via wifi on an MQTT server. The goal was to provide a simple API that controls all the functionality of the LED strip</ul>
+## About
+<ul>This project was created to contorl LED lights via wifi on an MQTT server. </ul>
 
 
-## Platform information	## Platform information
-<ul> This code was written in C++ using the arduino IDE. This code will only run on an esp32 currently, as the code is written to take advantage of the ESP32's multicore functionality.</ul>	<ul> This code was written in C++ using the arduino IDE. This code will only run on an esp32 currently, as the code is written to take advantage of the ESP32's multicore functionality.</ul>
+## Platform information
+<ul> This code was written in C++ using the arduino IDE. This code will only run on an esp32 currently, as the code is written to take advantage of the ESP32's multicore functionality.</ul>
 
 
 ## Install Information
 <ul> IDE Install - To run this code, download the code, make sure all the files are in the same folder, then open with Arduino IDE. Once open, set the IP of the MQTT server along with the ssid and password of the network you will be connecting to. Once complete, upload to the board. Thats all that is needed to run this code. </ul>
 
-## TODO	## TODO
-<ol>	<ol>
+## TODO	
+<ol>	
+ <li>Create new class of "actions." These actions will be called "transition actions." These will be used for the new system of "effect groups" and will be a way to change between different light groups</li>
  <li>Write code for a working file system that uses SPIFFS on the ESP32</li>	 <li>Write code for a working file system that uses SPIFFS on the ESP32</li>
  <li>Fix a ledstrip.write bug for the gradient. (there is an issue where the gradients are calculated slower than they are written to the strip. This happens because they are running on different cores.)</li>	 <li>Fix a ledstrip.write bug for the gradient. (there is an issue where the gradients are calculated slower than they are written to the strip. This happens because they are running on different cores.)</li>
  <li>Add a white avoidace algorithm for the gradient. (First make an algorithm that avoids white by adding a midpoint, but after add an algorithm that uses bezier curves in 3d space to avoid the grey line.</li>	 <li>Add a white avoidace algorithm for the gradient. (First make an algorithm that avoids white by adding a midpoint, but after add an algorithm that uses bezier curves in 3d space to avoid the grey line.</li>
  <li>Create an object that is dispalyed on the GPS graph that represents the drop zones.</li>	 <li>Create an object that is dispalyed on the GPS graph that represents the drop zones.</li>
-</ol>	</ol>
+</ol>
 
 ## MQTT API - COMMAND LIST AND DESCRIPTION
 <ul> Message Format - [3 Number Message Length][4 Character Action Code][Action Attributes]<br>Ex: 009SOLI255000255<br>
