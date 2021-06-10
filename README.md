@@ -18,10 +18,8 @@
 ## TODO	
 <ol>	
  <li>Create new class of "actions." These actions will be called "transition actions." These will be used for the new system of "effect groups" and will be a way to change between different light groups</li>
- <li>Write code for a working file system that uses SPIFFS on the ESP32</li>	 <li>Write code for a working file system that uses SPIFFS on the ESP32</li>
- <li>Fix a ledstrip.write bug for the gradient. (there is an issue where the gradients are calculated slower than they are written to the strip. This happens because they are running on different cores.)</li>	 <li>Fix a ledstrip.write bug for the gradient. (there is an issue where the gradients are calculated slower than they are written to the strip. This happens because they are running on different cores.)</li>
- <li>Add a white avoidace algorithm for the gradient. (First make an algorithm that avoids white by adding a midpoint, but after add an algorithm that uses bezier curves in 3d space to avoid the grey line.</li>	 <li>Add a white avoidace algorithm for the gradient. (First make an algorithm that avoids white by adding a midpoint, but after add an algorithm that uses bezier curves in 3d space to avoid the grey line.</li>
- <li>Create an object that is dispalyed on the GPS graph that represents the drop zones.</li>	 <li>Create an object that is dispalyed on the GPS graph that represents the drop zones.</li>
+ <li>Write code for a working file system that uses SPIFFS on the ESP32</li>	
+ <li>Add a white avoidace algorithm for the gradient. (First make an algorithm that avoids white by adding a midpoint, but after add an algorithm that uses bezier curves in 3d space to avoid the grey line.</li>
 </ol>
 
 ## MQTT API - COMMAND LIST AND DESCRIPTION
