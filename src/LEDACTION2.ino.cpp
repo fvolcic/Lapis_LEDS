@@ -42,11 +42,11 @@ void setup() {
   
   connect();
 
-  xTaskCreatePinnedToCore(runLEDs, "LED TASK", 10000, NULL, 0, &ledTask, 1); //Pin to core 1
-  xTaskCreatePinnedToCore(runWiFiTasks, "WiFi TASK", 10000, NULL, 0, &WiFiTask, 0); //Pin to core 0
+  xTaskCreatePinnedToCore(runLEDs, "LED TASK", 10000, NULL, 0, &ledTask, LED_CORE); //Pin to core 1
+  xTaskCreatePinnedToCore(runWiFiTasks, "WiFi TASK", 10000, NULL, 0, &WiFiTask, ALT_CORE); //Pin to core 0
   
 }
-
+//delete the loop function.
 void loop(){vTaskDelete(NULL);}
 
 //This is linked to the MQTT Client. This is called whenever a new message is received on a subscribed topic.

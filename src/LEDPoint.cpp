@@ -25,6 +25,7 @@ class LEDPoint : public LED_Action {
       char colDefiner[] = {'0', '0', '0'};
       int index = 0;
 
+      //TODO: update to new message format.
       for (char * msgPtr2 = message; *msgPtr2; ++msgPtr2) {
         if (index < 3)
           colDefiner[index] = *msgPtr2;

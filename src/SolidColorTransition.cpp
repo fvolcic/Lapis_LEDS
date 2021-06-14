@@ -70,7 +70,9 @@ class SolidTransition : public LED_Action {
       int index = 0;
 
 
-
+      //TODO:
+      //This must be updated to use the new message parser
+      //This is an outdated paring design I used at the very start. 
       for (char * msgPtr2 = message; *msgPtr2; ++msgPtr2) {
         if (index < 3)
           colDefiner[index] = *msgPtr2;

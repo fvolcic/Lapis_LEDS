@@ -43,26 +43,11 @@ public:
   }
 
   //The setup function for the solid led colors
+  //Will generate the actual gradient that we need to use.
   void setupLEDs(rgb_color *colors)
   {
 
     this->preparedForWrite = false;
-    /*
-    Serial.print("Gradient Color 1: R:");
-    Serial.print(c1.red);
-    Serial.print(" G: ");
-    Serial.print(c1.green);
-    Serial.print(" B: ");
-    Serial.print(c1.blue);
-    Serial.println("");
-     Serial.print("Gradient Color 2: R:");
-    Serial.print(c2.red);
-    Serial.print(" G: ");
-    Serial.print(c2.green);
-    Serial.print(" B: ");
-    Serial.print(c2.blue);
-    Serial.println("");
-    */
     double colorDistance = 0;
 
     //Store the vector components
@@ -75,31 +60,21 @@ public:
     colorDistance = sqrt(colorDistance * colorDistance + (c1.blue - c2.blue) * (c1.blue - c2.blue));
     colorDistance = sqrt(colorDistance * colorDistance + (c1.green - c2.green) * (c1.green - c2.green));
 
-    //  Serial.print("The Distance Between the Colors is: ");
-    //  Serial.println(colorDistance);
-
     //The components are now in unit vector form
     Vx = Vx / colorDistance;
     Vy = Vy / colorDistance;
     Vz = Vz / colorDistance;
-
-    //  Serial.println("Printing Unit Vector Components");
-    //  Serial.println(Vx);
-    //  Serial.println(Vy);
-    //  Serial.println(Vz);
 
     int half_led_count = led_count / 2;
 
     //The size of each vector step through 3d space
     double stepSize = colorDistance / half_led_count;
 
-    Serial.print("Step Size: ");
-    Serial.println(stepSize);
-
+    //TODO:
+    //This can cause a odd looking gradient in the case of odd number of LEDs.
+    //Fix this.
     for (int i = 0; i < half_led_count; i++)
     {
-      Serial.print(" - x color comp- ");
-      // Serial.print((int)((double)c2.blue + i*(stepSize * Vz)));
       this->colors[i].red = (int)((double)c2.red + i * (stepSize * Vx));
       this->colors[i].green = (int)((double)c2.green + i * (stepSize * Vy));
       this->colors[i].blue = (int)((double)c2.blue + i * (stepSize * Vz));
@@ -107,17 +82,7 @@ public:
       colors[i] = this->colors[i];
       this->colors[led_count - 1 - i] = this->colors[i];
       colors[led_count - 1 - i] = this->colors[i];
-      /*
-      Serial.print(" | R: ");
-      Serial.print(colors[i].red);
-      Serial.print(" G: ");
-      Serial.print(colors[i].green);
-      Serial.print(" B: ");
-        Serial.print(colors[i].blue);
-      */
     }
-
-    //  Serial.println("");
 
     this->preparedForWrite = true;
   }
@@ -146,8 +111,6 @@ public:
     }
 
     this->preparedForWrite = false;
-    // Serial.println("RUNNING GRADIENT DISPLAY");
-
     for (int i = 0; i < led_count; i++)
     {
       colors[i] = this->colors[this->getCircularOffset(i + offset)];
