@@ -1,0 +1,66 @@
+This file contains the definition of the meaning of messages.
+This is specifically for the new json format of messages.
+The prior message system is being depreciated.
+
+<===== MESSAGE REQUIREMENTS =====>
+
+    -- 1 --> All JSON Messages must have a "type" value. This "type" value will
+             tell the strip how to handle the incoming messages. In the case that
+             no "type" appears in the message, the message will be discarded. 
+    -- 2 --> Messages must be semantically correct. If a message is received and 
+             its type is specified, but the message is semantically incorrect according
+             to that type, then the message will be discarded. 
+
+<===== MESSAGE TYPES =====>
+<== LED Action Message ==>
+    -- definition --> An LED Action message has the job of sending actions to 
+                      the led strip. For example, say one wanted to display a
+                      gradient on the led strip, they would need to send an LED
+                      Action message to the led strip defining the gradient and 
+                      the gradients properties.
+
+<== LED Strip Command ==>
+    -- definition --> A LED Strip Command is something that tells the LED strip to
+                      perform some action. This is, by definition, any command that
+                      changes the led strip but does not add led effects. An example 
+                      would be clearing all effects from the strip, or adjusting the
+                      leds brightness.
+
+<===== JSON Message Format =====>
+<== LED Action Message ==>
+    -- format -->
+        {
+            "type":"LEDACTION-JSON",
+            "effect-params": [<param-val 1>, <param-val 2>, ... , <param-val n>],
+            "action-group-id":<unsigned int>,
+            "layer":<unsigned int | optional>
+        }
+    
+    -- definitions -->
+        type: str -> Type tells the computer that the message represents a json action.
+        effect-params: list -> This is a list of parameters that set different values in
+                                the led effect. 
+        action-group-id: unsigned int -> This defines which action group to put the newly defined action into.
+        layer: unsigned int -> This defines which layer to place the action at. If unspecified, then this message
+                                would represent an effect that is to be added to the strip. If the message has this
+                                parameter defined, then this effect will replace whatever action is running at
+                                the current layer.
+                                ex.) if the strip has <gradient> <brightness gradient> as the actions in 
+                                     action group 1, and we send a message with layer set as 0, the <gradient> will 
+                                     be replaced with the action defined in the message.
+                                    
+<== LED Strip Command ==>
+    -- format -->
+        {
+            "type":"COMMAND",
+            "command-id": <str>,
+            "command-params":[<param-val 1>, <param-val 2>, ... , <param-val n>]
+        }
+    -- definitions -->
+        type: str -> Tells us that the message represents a led strip command.
+        command-id: str -> Tells us the identification of the commnad. For example,
+                           if the command is to clear all actions, the command-id might be
+                           "strip-clear".
+        command-params: list -> command-params gives additional information regarding the command.
+                                Any data needed for the command to be properly executed will appear here.
+                                This list will be passed to the command executer.
